@@ -1,0 +1,5 @@
+streamlit
+pdfkit
+jinja2
+weasyprint ; platform_system == "Linux"
+Pillow
