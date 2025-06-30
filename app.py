@@ -13,7 +13,7 @@ st.set_page_config(
     page_icon="📚"
 )
 
-# ─── Centered Logo ─────────────────────────────────────────────────────────────
+# ─── Centered Logo in Sidebar ──────────────────────────────────────────────────
 logo_path = os.path.join(os.getcwd(), "assets", "logo.png")
 if os.path.exists(logo_path):
     with open(logo_path, "rb") as f:
@@ -31,7 +31,7 @@ else:
 st.sidebar.title("📘 About")
 st.sidebar.info(
     "Generate a personalized weekly IELTS study plan based on your current score, target, daily time, and test type.\n\n"
-    "🎯 For students preparing for Academic/General Training exams."
+    "Try it free now — first 30 users only!"
 )
 
 # ─── Header ────────────────────────────────────────────────────────────────────
@@ -47,12 +47,12 @@ with st.form("study_factors_form"):
     with col1:
         current_score = st.slider("Current IELTS Score", 0.0, 9.0, 5.5, step=0.5)
         daily_hours = st.slider("Hours Available Daily", 1, 8, 3)
-        duration_map = {"2 Weeks": 2, "1 Month": 4, "2 Months": 8, "Custom": None}
-        dur_label = st.selectbox("Preparation Duration", list(duration_map.keys()))
+        duration_options = {"2 Weeks": 2, "1 Month": 4, "2 Months": 8, "Custom": None}
+        dur_label = st.selectbox("Preparation Duration", list(duration_options.keys()))
         if dur_label == "Custom":
             total_weeks = st.number_input("Enter number of weeks", min_value=1, value=8)
         else:
-            total_weeks = duration_map[dur_label]
+            total_weeks = duration_options[dur_label]
     with col2:
         target_score = st.slider("Target IELTS Score", 0.0, 9.0, 7.0, step=0.5)
         test_format = st.selectbox("Test Type", ["Academic", "General Training"])
@@ -67,7 +67,7 @@ plan = generate_study_plan(test_format, current_score, target_score, daily_hours
 
 st.markdown("---")
 st.subheader(f"📅 Your {test_format} Study Plan ({total_weeks} Week{'s' if total_weeks != 1 else ''})")
-st.markdown(f"**Current:** {current_score} ➜ **Target:** {target_score} | **Daily:** {daily_hours}h")
+st.markdown(f"**Current:** {current_score} ➜ **Target:** {target_score} | **Daily Hours:** {daily_hours}")
 
 for week, days in plan.items():
     st.markdown(f"### {week}")
@@ -78,7 +78,7 @@ for week, days in plan.items():
             st.markdown(f"- **Hour {sess['Hour']}:** {sess['Task']}  \n  _Resources:_ {res_list}")
     st.markdown("")
 
-# ─── PDF Download ──────────────────────────────────────────────────────────────
+# ─── PDF Download Function ──────────────────────────────────────────────────────
 def make_pdf(plan_data):
     html = """
     <h1>IELTS Study Plan</h1>
@@ -99,25 +99,29 @@ def make_pdf(plan_data):
     rendered = tpl.render(plan=plan_data)
 
     try:
+        # Update this path to match where you installed wkhtmltopdf
         path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
         config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
-        return pdfkit.from_string(rendered, False, configuration=config)
+        pdf = pdfkit.from_string(rendered, False, configuration=config)
+        return pdf
     except Exception as e:
         st.error(f"🚨 PDF generation failed: {e}")
         return None
 
-pdf_bytes = make_pdf(plan)
-if pdf_bytes is not None:
+
+# ─── Trigger PDF Generation and Show Button ─────────────────────────────────────
+pdf = make_pdf(plan)
+
+if pdf is not None:
     st.download_button(
         "📥 Download as PDF",
-        data=pdf_bytes,
+        data=pdf,
         file_name=f"IELTS_Plan_{test_format}.pdf",
         mime="application/pdf"
     )
 
 # ─── Optional: Feedback Form Link (for collecting testimonials) ─────────────────
 st.markdown("### 📝 Want to help improve this tool? Share your thoughts!")
-st.markdown("We'd love to hear how we can make this app more helpful to future users.")
 FEEDBACK_URL = "https://forms.gle/XBLTgBpPTHAaUDCi6 "
 st.markdown(f"[📝 Open Feedback Form]({FEEDBACK_URL})", unsafe_allow_html=True)
 
