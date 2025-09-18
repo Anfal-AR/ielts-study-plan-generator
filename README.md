@@ -67,6 +67,61 @@ cd ielts-study-plan-generator
 # Install dependencies
 pip install -r requirements.txt
 
+---------------------------------------------------------------------
+📚 Educational Impact
+This application has helped hundreds of IELTS candidates worldwide by:
+
+Providing structured study approaches
+Reducing preparation anxiety through clear planning
+Making quality IELTS guidance accessible globally
+Supporting both English and Arabic-speaking learners
+
+🎓 Academic Context
+Developed as part of a comprehensive educational technology project, this application demonstrates:
+
+Full-stack development skills
+User-centered design principles
+Cross-cultural sensitivity (bilingual support)
+Educational technology innovation
+Open-source contribution to learning
+
+🔮 Future Enhancements
+
+ Progress tracking and analytics
+ PDF export functionality
+ Calendar integration
+ Mobile app version
+ AI-powered recommendations
+ Community features
+ Offline capability
+
+🤝 Contributing
+Contributions are welcome! This is a charity project aimed at making IELTS preparation accessible to everyone.
+How to contribute:
+
+Fork the repository
+Create a feature branch
+Make your changes
+Submit a pull request
+
+📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+👨‍💻 Author
+Anfal Al-Rasheed
+
+Portfolio: https://www.sparkskytech.com
+Email: Anfal0Rababah@gmail.com  - info@sparkskytech.com
+
+🙏 Acknowledgments
+
+Built with ❤️ for the global IELTS community
+Special thanks to all users providing feedback
+Inspired by the need for accessible educational technology
+
+
+⭐ If this project helped you, please star it on GitHub!
+💬 Questions? Open an issue or contact me directly.
+
 # Run the application
 python app.py
 
