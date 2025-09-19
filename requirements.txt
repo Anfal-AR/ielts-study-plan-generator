@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 flask==2.3.3
-reportlab==4.0.4
 gunicorn==21.2.0
 python-dotenv==1.0.0
 requests==2.31.0
@@ -9,12 +7,5 @@ werkzeug==2.3.7
 click==8.1.7
 itsdangerous==2.1.2
 markupsafe==2.1.3
-gunicorn==20.1.0
-
-=======
-streamlit
-pdfkit
-jinja2
-weasyprint ; platform_system == "Linux"
+reportlab==4.0.4
 Pillow
->>>>>>> 11442c5835ce787d04033632d03c9a68422a5f01
