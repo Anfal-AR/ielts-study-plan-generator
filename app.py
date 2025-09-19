@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+# HEAD
 from flask import Flask, render_template, request, jsonify, send_file
 import json
 import io
@@ -507,7 +507,7 @@ def health():
 # ─── Run App ───────────────────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-=======
+
 import streamlit as st
 from study_plan_logic import generate_study_plan
 import pdfkit
@@ -647,4 +647,3 @@ st.markdown(
 </div>""",
     unsafe_allow_html=True
 )
->>>>>>> 11442c5835ce787d04033632d03c9a68422a5f01
