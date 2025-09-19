@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Smart Study Plan Generator | مولد خطة دراسة الآيلتس الذكية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        /* Arabic font support */
+        body[dir="rtl"] {
+            font-family: 'Tajawal', 'Poppins', sans-serif;
+        }
+        /* Enhanced Header */
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+        }
+        .logo-fallback {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .brand-text h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, #e6f3ff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
+        }
+        .brand-text .tagline {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.95;
+            font-size: 1rem;
+            font-weight: 300;
+            color: #e6f3ff;
+            font-style: italic;
+        }
+        /* Updated Language Selector Styling */
+        .language-selector select {
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .language-selector select:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.25));
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .language-selector select option {
+            color: #333;
+            background: white;
+            font-weight: 500;
+        }
+        /* Unified Form Container */
+        .main-content {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        .generator-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        .form-title {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+        }
+        /* Input Styles */
+        .input-group {
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: end;
+        }
+        .input-group.single {
+            grid-template-columns: 1fr;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+        /* Slider Styles */
+        .slider-container {
+            position: relative;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .slider {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #ddd, #667eea);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .slider-value {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            min-width: 70px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        /* Dropdown Styles */
+        .form-select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            background: white;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+        /* Toggle between interfaces */
+        .interface-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        /* Generate Button */
+        .generate-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+        .generate-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* Results Section */
+        .results-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .results-title {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .plan-overview {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid #667eea;
+        }
+        .plan-overview h4 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        .plan-overview p {
+            margin: 0.5rem 0;
+            color: #4a5568;
+        }
+        .week-card {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #667eea;
+        }
+        .week-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+        .day-schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .day-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .day-item h5 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .day-item ul {
+            list-style: none;
+            padding: 0;
+        }
+        .day-item li {
+            padding: 0.25rem 0;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .export-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .export-pdf {
+            background: #dc3545;
+            color: white;
+        }
+        .export-pdf:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        .export-text {
+            background: #28a745;
+            color: white;
+        }
+        .export-text:hover {
+            background: #218838;
+        }
+        .export-copy {
+            background: #6c757d;
+            color: white;
+        }
+        .export-copy:hover {
+            background: #5a6268;
+        }
+        /* Loading animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .hidden {
+            display: none;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .input-group {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .brand-text h1 {
+                font-size: 2rem;
+            }
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .interface-toggle {
+                flex-direction: column;
+                align-items: center;
+            }
+            .slider-container {
+                flex-direction: row-reverse;
+                gap: 0.5rem;
+            }
+            .slider-value {
+                align-self: center;
+            }
+            .export-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        /* RTL Support */
+        [dir="rtl"] .header-container {
+            direction: rtl;
+        }
+        [dir="rtl"] .brand-section {
+            flex-direction: row-reverse;
+        }
+        [dir="rtl"] .slider-container {
+            flex-direction: row-reverse;
+        }
+        [dir="rtl"] .interface-toggle {
+            direction: rtl;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-section">
+                <div class="logo">
+                    <img src="/static/images/logo.png" alt="SparkSkyTech Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="logo-fallback" style="display: none;">SST</div>
+                </div>
+                <div class="brand-text">
+                    <h1 id="mainTitle">IELTS Smart Study Plan Generator</h1>
+                    <p class="tagline" id="tagline">Personalized Learning, Proven Results</p>
+                </div>
+            </div>
+            <div class="language-selector">
+                <select name="language" id="language">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="ar">🇸🇦 العربية</option>
+                </select>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="generator-container">
+            <h2 class="form-title" id="formTitle">Generate Your Personalized Study Plan</h2>
+            <!-- Interface Toggle -->
+            <div class="interface-toggle">
+                <button type="button" class="toggle-btn active" id="sliderMode">
+                    <span class="toggle-text">Interactive Sliders</span>
+                </button>
+                <button type="button" class="toggle-btn" id="dropdownMode">
+                    <span class="toggle-text">Dropdown Selection</span>
+                </button>
+            </div>
+            <form id="studyPlanForm">
+                <!-- Slider Interface (Default) -->
+                <div id="sliderInterface">
+                    <div class="input-group">
+                        <div class="form-field">
+                            <label class="form-label" id="currentScoreLabel">Current IELTS Score</label>
+                            <div class="slider-container">
+                                <input type="range" id="currentScoreSlider" name="current_score" min="3" max="9" step="0.5" value="5.5" class="slider">
+                                <span class="slider-value" id="currentScoreValue">5.5</span>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" id="targetScoreLabel">Target IELTS Score</label>
+                            <div class="slider-container">
+                                <input type="range" id="targetScoreSlider" name="target_score" min="4" max="9" step="0.5" value="7.0" class="slider">
+                                <span class="slider-value" id="targetScoreValue">7.0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-field">
+                            <label class="form-label" id="hoursLabel">Hours Available Daily</label>
+                            <div class="slider-container">
+                                <input type="range" id="hoursSlider" name="hours_daily" min="1" max="8" step="1" value="2" class="slider">
+                                <span class="slider-value" id="hoursValue">2</span>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" id="testTypeLabel">Test Type</label>
+                            <select name="test_type" class="form-select" id="testTypeSelect">
+                                <option value="academic" id="academicOption">Academic IELTS</option>
+                                <option value="general" id="generalOption">General Training</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group single">
+                        <div class="form-field">
+                            <label class="form-label" id="weeksLabel">Preparation Duration (Weeks)</label>
+                            <div class="slider-container">
+                                <input type="range" id="weeksSlider" name="num_weeks" min="1" max="12" step="1" value="4" class="slider">
+                                <span class="slider-value" id="weeksValue">4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dropdown Interface -->
+                <div id="dropdownInterface" class="hidden">
+                    <div class="input-group">
+                        <div class="form-field">
+                            <label class="form-label" id="currentLevelLabel">Your current English level:</label>
+                            <select name="currentLevel" class="form-select" id="currentLevelSelect">
+                                <option value="" id="selectLevelOption">-- Select your level --</option>
+                                <option value="4.5" id="beginnerOption">Beginner (A1-A2) - Band 4.5</option>
+                                <option value="5.5" id="intermediateOption">Intermediate (B1-B2) - Band 5.5</option>
+                                <option value="7.0" id="advancedOption">Advanced (C1-C2) - Band 7.0</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" id="targetBandLabel">Target IELTS Band:</label>
+                            <select name="targetBand" class="form-select" id="targetBandSelect">
+                                <option value="" id="selectTargetOption">-- Select target band --</option>
+                                <option value="5.5">Band 5.5</option>
+                                <option value="6.0">Band 6.0</option>
+                                <option value="6.5">Band 6.5</option>
+                                <option value="7.0">Band 7.0</option>
+                                <option value="7.5">Band 7.5</option>
+                                <option value="8.0">Band 8.0</option>
+                                <option value="8.5">Band 8.5</option>
+                                <option value="9.0">Band 9.0</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-field">
+                            <label class="form-label" id="testTypeDropdownLabel">Test Type:</label>
+                            <select name="testType" class="form-select" id="testTypeDropdown">
+                                <option value="" id="selectTestOption">-- Select test type --</option>
+                                <option value="academic" id="academicDropdownOption">Academic IELTS</option>
+                                <option value="general" id="generalDropdownOption">General Training IELTS</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" id="hoursDropdownLabel">Study Hours Per Day:</label>
+                            <select name="hoursDaily" class="form-select" id="hoursDropdown">
+                                <option value="" id="selectHoursOption">-- Select hours --</option>
+                                <option value="1">1 hour</option>
+                                <option value="2">2 hours</option>
+                                <option value="3">3 hours</option>
+                                <option value="4">4 hours</option>
+                                <option value="5">5+ hours</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group single">
+                        <div class="form-field">
+                            <label class="form-label" id="durationLabel">Preparation Duration:</label>
+                            <select name="prepDuration" class="form-select" id="durationSelect">
+                                <option value="" id="selectDurationOption">-- Select duration --</option>
+                                <option value="2">2 weeks (Intensive)</option>
+                                <option value="4">4 weeks (Standard)</option>
+                                <option value="6">6 weeks (Comprehensive)</option>
+                                <option value="8">8 weeks (Thorough)</option>
+                                <option value="12">12 weeks (Extended)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    <i class="fas fa-magic"></i> <span id="generateText">Generate My Personalized Study Plan</span>
+                </button>
+            </form>
+            <!-- Loading Animation -->
+            <div class="loading" id="loadingAnimation">
+                <div class="spinner"></div>
+                <p id="loadingText">Generating your personalized study plan...</p>
+            </div>
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <h3 class="results-title" id="resultsTitle">Your Personalized Study Plan</h3>
+                <div id="studyPlanContent"></div>
+                <div class="export-buttons">
+                    <button type="button" class="export-btn export-pdf" id="exportPdfBtn">
+                        <i class="fas fa-file-pdf"></i> <span id="exportPdfBtnText">Download Professional PDF</span>
+                    </button>
+                    <button type="button" class="export-btn export-text" id="exportTextBtn">
+                        <i class="fas fa-file-text"></i> <span id="exportTextBtnText">Download as Text</span>
+                    </button>
+                    <button type="button" class="export-btn export-copy" id="copyTextBtn">
+                        <i class="fas fa-copy"></i> <span id="copyTextBtnText">Copy to Clipboard</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Resources Section -->
+    <section class="resources-section">
+        <div class="resources-container">
+            <h2 class="resources-title">Comprehensive IELTS Resources by SparkSkyTech</h2>
+            <div class="resources-grid">
+                <!-- Listening Skills - Red Theme -->
+                <div class="resource-category skill-listening">
+                    <div class="category-title">
+                        <i class="fas fa-headphones"></i>
+                        Listening Skills
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/ielts/ielts-listening" class="resource-link" target="_blank">
+                            <i class="fas fa-play-circle"></i>
+                            IELTS Listening Preparation
+                        </a>
+                        <a href="https://www.ielts.org/for-test-takers/test-format/listening" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Official IELTS Listening Format
+                        </a>
+                        <a href="https://takeielts.britishcouncil.org/take-ielts/prepare/practice-tests" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            British Council Practice Tests
+                        </a>
+                    </div>
+                </div>
+                <!-- Reading Skills - Green Theme -->
+                <div class="resource-category skill-reading">
+                    <div class="category-title">
+                        <i class="fas fa-book-open"></i>
+                        Reading Skills
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/ielts/ielts-reading" class="resource-link" target="_blank">
+                            <i class="fas fa-bookmark"></i>
+                            IELTS Reading Strategies
+                        </a>
+                        <a href="https://www.ielts.org/for-test-takers/test-format/reading" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Official Reading Format
+                        </a>
+                        <a href="https://ieltsliz.com/ielts-reading-tips/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            IELTS Liz Reading Tips
+                        </a>
+                    </div>
+                </div>
+                <!-- Writing Skills - Blue Theme -->
+                <div class="resource-category skill-writing">
+                    <div class="category-title">
+                        <i class="fas fa-pen-fancy"></i>
+                        Writing Skills
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/ielts/ielts-writing-preparation" class="resource-link" target="_blank">
+                            <i class="fas fa-edit"></i>
+                            IELTS Writing Preparation
+                        </a>
+                        <a href="https://www.ielts.org/for-test-takers/test-format/writing" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Official Writing Guidelines
+                        </a>
+                        <a href="https://www.ieltspodcast.com/ielts-writing/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            IELTS Writing Podcast
+                        </a>
+                    </div>
+                </div>
+                <!-- Speaking Skills - Yellow Theme -->
+                <div class="resource-category skill-speaking">
+                    <div class="category-title">
+                        <i class="fas fa-microphone"></i>
+                        Speaking Skills
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/ielts/ielts-speaking" class="resource-link" target="_blank">
+                            <i class="fas fa-comments"></i>
+                            IELTS Speaking Practice
+                        </a>
+                        <a href="https://www.ielts.org/for-test-takers/test-format/speaking" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Official Speaking Format
+                        </a>
+                        <a href="https://www.youtube.com/c/IELTSSpeaking" class="resource-link external-link" target="_blank">
+                            <i class="fab fa-youtube"></i>
+                            IELTS Speaking YouTube
+                        </a>
+                    </div>
+                </div>
+                <!-- Free Resources & Tools - Teal Theme -->
+                <div class="resource-category skill-resources">
+                    <div class="category-title">
+                        <i class="fas fa-gift"></i>
+                        Free Resources & Tools
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/ielts/ielts_free_resources" class="resource-link" target="_blank">
+                            <i class="fas fa-download"></i>
+                            Free IELTS Resources
+                        </a>
+                        <a href="https://www.sparkskytech.com/shop/learning-education" class="resource-link" target="_blank">
+                            <i class="fas fa-shopping-cart"></i>
+                            Educational Digital Products
+                        </a>
+                        <a href="https://www.examenglish.com/IELTS/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Free Practice Tests
+                        </a>
+                    </div>
+                </div>
+                <!-- Blog & Tips - Orange Theme -->
+                <div class="resource-category skill-blog">
+                    <div class="category-title">
+                        <i class="fas fa-blog"></i>
+                        IELTS Blog & Tips
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/blog/ielts_blogs" class="resource-link" target="_blank">
+                            <i class="fas fa-newspaper"></i>
+                            Latest IELTS Blog Posts
+                        </a>
+                        <a href="https://www.sparkskytech.com/ielts" class="resource-link" target="_blank">
+                            <i class="fas fa-home"></i>
+                            IELTS Main Hub
+                        </a>
+                        <a href="https://ieltsadvantage.com/blog/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            IELTS Advantage Blog
+                        </a>
+                    </div>
+                </div>
+                <!-- Official Resources - Dark Theme -->
+                <div class="resource-category skill-official">
+                    <div class="category-title">
+                        <i class="fas fa-certificate"></i>
+                        Official IELTS Resources
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.ielts.org/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Official IELTS Website
+                        </a>
+                        <a href="https://takeielts.britishcouncil.org/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            British Council IELTS
+                        </a>
+                        <a href="https://www.idp.com/ielts/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            IDP IELTS
+                        </a>
+                    </div>
+                </div>
+                <!-- Vocabulary & Grammar - Purple Theme -->
+                <div class="resource-category skill-vocabulary">
+                    <div class="category-title">
+                        <i class="fas fa-language"></i>
+                        Vocabulary & Grammar
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.sparkskytech.com/ielts/ielts-vocabulary" class="resource-link" target="_blank">
+                            <i class="fas fa-spell-check"></i>
+                            IELTS Vocabulary Building
+                        </a>
+                        <a href="https://www.sparkskytech.com/ielts/ielts-grammar" class="resource-link" target="_blank">
+                            <i class="fas fa-grammar"></i>
+                            IELTS Grammar Essentials
+                        </a>
+                        <a href="https://www.cambridge.org/elt/catalogue/subject/custom/item7640665/" class="resource-link external-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Cambridge Vocabulary
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="copyright">
+                <p>© 2025 <a href="https://www.sparkskytech.com" style="color: white; text-decoration: underline;">Spark Sky Tech</a> — Made with 💖 for Learners</p>
+            </div>
+            <div class="links">
+                <a href="https://www.sparkskytech.com/ielts" style="color: #667eea; text-decoration:none;">Free IELTS Materials</a> |
+                <a href="https://www.sparkskytech.com/shop/learning-education" style="color: #667eea; text-decoration:none;">Shop IELTS Tools</a> |
+                <a href="https://www.youtube.com/watch?v=_Te3zfFW2ZU&list=PLaSmN7qMfXNQBOpbO2P6l9kDU4p0tRQDs" style="color: #667eea; text-decoration:none;">YouTube Channel</a> |
+                <a href="https://web.facebook.com/groups/1104742131254330" style="color: #667eea; text-decoration:none;">Facebook Group</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Resource Section Styles -->
+    <style>
+        .resources-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 4rem 0;
+            margin-top: 4rem;
+        }
+        .resources-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .resources-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3rem;
+        }
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        
+        }
+        /* Color-coded skill categories */
+        .skill-listening {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            border-left: 5px solid #ff4757;
+        }
+        .skill-reading {
+            background: linear-gradient(135deg, #4ecdc4, #6bcf7f);
+            border-left: 5px solid #2ed573;
+        }
+        .skill-writing {
+            background: linear-gradient(135deg, #45b7d1, #4834d4);
+            border-left: 5px solid #3742fa;
+        }
+        .skill-speaking {
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            border-left: 5px solid #e67e22;
+        }
+        .skill-vocabulary {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border-left: 5px solid #7d3c98;
+        }
+        .skill-resources {
+            background: linear-gradient(135deg, #16a085, #27ae60);
+            border-left: 5px solid #148f77;
+        }
+        .skill-blog {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            border-left: 5px solid #c0392b;
+        }
+        .skill-official {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-left: 5px solid #1a252f;
+        }
+        .resource-category {
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        .resource-category:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+        .category-title i {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+        }
+        .resource-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .resource-link {
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        .resource-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .external-link {
+            border-left: 3px solid rgba(255, 255, 255, 0.4);
+            padding-left: 1.5rem;
+        }
+    </style>
+    <!-- Footer Styles -->
+    <style>
+        .app-footer {
+            background: #1a252f;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .copyright {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .links a:hover {
+            text-decoration: underline;
+            color: #4a5568;
+        }
+    </style>
+    <!-- Scripts -->
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                mainTitle: "IELTS Smart Study Plan Generator",
+                tagline: "Personalized Learning, Proven Results",
+                formTitle: "Generate Your Personalized Study Plan",
+                toggleSlider: "Interactive Sliders",
+                toggleDropdown: "Dropdown Selection",
+                currentScoreLabel: "Current IELTS Score",
+                targetScoreLabel: "Target IELTS Score",
+                hoursLabel: "Hours Available Daily",
+                testTypeLabel: "Test Type",
+                weeksLabel: "Preparation Duration (Weeks)",
+                academicOption: "Academic IELTS",
+                generalOption: "General Training",
+                currentLevelLabel: "Your current English level:",
+                selectLevelOption: "-- Select your level --",
+                beginnerOption: "Beginner (A1-A2) - Band 4.5",
+                intermediateOption: "Intermediate (B1-B2) - Band 5.5",
+                advancedOption: "Advanced (C1-C2) - Band 7.0",
+                targetBandLabel: "Target IELTS Band:",
+                selectTargetOption: "-- Select target band --",
+                testTypeDropdownLabel: "Test Type:",
+                selectTestOption: "-- Select test type --",
+                academicDropdownOption: "Academic IELTS",
+                generalDropdownOption: "General Training IELTS",
+                hoursDropdownLabel: "Study Hours Per Day:",
+                selectHoursOption: "-- Select hours --",
+                durationLabel: "Preparation Duration:",
+                selectDurationOption: "-- Select duration --",
+                generateText: "Generate My Personalized Study Plan",
+                loadingText: "Generating your personalized study plan...",
+                resultsTitle: "Your Personalized Study Plan",
+                exportPdfBtnText: "Download Professional PDF",
+                exportTextBtnText: "Download as Text",
+                copyTextBtnText: "Copy to Clipboard"
+            },
+            ar: {
+                mainTitle: "مولد خطة دراسة الآيلتس الذكية",
+                tagline: "تعلم شخصي، نتائج مضمونة",
+                formTitle: "قم بإنشاء خطة دراستك الشخصية",
+                toggleSlider: "أشرطة تفاعلية",
+                toggleDropdown: "قائمة منسدلة",
+                currentScoreLabel: "درجة الآيلتس الحالية",
+                targetScoreLabel: "الدرجة المستهدفة للآيلتس",
+                hoursLabel: "الساعات المتاحة يومياً",
+                testTypeLabel: "نوع الاختبار",
+                weeksLabel: "مدة التحضير (بالأسابيع)",
+                academicOption: "آيلتس أكاديمي",
+                generalOption: "التدريب العام",
+                currentLevelLabel: "مستواك الحالي في اللغة الإنجليزية:",
+                selectLevelOption: "-- اختر مستواك --",
+                beginnerOption: "مبتدئ (A1-A2) - درجة 4.5",
+                intermediateOption: "متوسط (B1-B2) - درجة 5.5",
+                advancedOption: "متقدم (C1-C2) - درجة 7.0",
+                targetBandLabel: "الدرجة المستهدفة للآيلتس:",
+                selectTargetOption: "-- اختر الدرجة المستهدفة --",
+                testTypeDropdownLabel: "نوع الاختبار:",
+                selectTestOption: "-- اختر نوع الاختبار --",
+                academicDropdownOption: "آيلتس أكاديمي",
+                generalDropdownOption: "آيلتس التدريب العام",
+                hoursDropdownLabel: "ساعات الدراسة في اليوم:",
+                selectHoursOption: "-- اختر عدد الساعات --",
+                durationLabel: "مدة التحضير:",
+                selectDurationOption: "-- اختر المدة --",
+                generateText: "إنشاء خطة دراستي الشخصية",
+                loadingText: "جاري إنشاء خطة دراستك الشخصية...",
+                resultsTitle: "خطة دراستك الشخصية",
+                exportPdfBtnText: "تحميل PDF احترافي",
+                exportTextBtnText: "تحميل كملف نصي",
+                copyTextBtnText: "نسخ إلى الحافظة"
+            }
+        };
+        // Language switching functionality
+        function switchLanguage(lang) {
+            const elements = translations[lang];
+            const body = document.body;
+            const htmlRoot = document.getElementById('htmlRoot');
+            // Update text content
+            for (const [id, text] of Object.entries(elements)) {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'OPTION') {
+                        element.textContent = text;
+                    } else if (element.classList.contains('toggle-text')) {
+                        element.textContent = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            }
+            // Set RTL for Arabic
+            if (lang === 'ar') {
+                body.setAttribute('dir', 'rtl');
+                htmlRoot.setAttribute('lang', 'ar');
+            } else {
+                body.setAttribute('dir', 'ltr');
+                htmlRoot.setAttribute('lang', 'en');
+            }
+        }
+        // Interface Toggle Functionality
+        const sliderModeBtn = document.getElementById('sliderMode');
+        const dropdownModeBtn = document.getElementById('dropdownMode');
+        const sliderInterface = document.getElementById('sliderInterface');
+        const dropdownInterface = document.getElementById('dropdownInterface');
+        sliderModeBtn.addEventListener('click', () => {
+            sliderModeBtn.classList.add('active');
+            dropdownModeBtn.classList.remove('active');
+            sliderInterface.classList.remove('hidden');
+            dropdownInterface.classList.add('hidden');
+        });
+        dropdownModeBtn.addEventListener('click', () => {
+            dropdownModeBtn.classList.add('active');
+            sliderModeBtn.classList.remove('active');
+            dropdownInterface.classList.remove('hidden');
+            sliderInterface.classList.add('hidden');
+        });
+        // Slider Value Updates
+        function updateSliderValue(sliderId, valueId) {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(valueId);
+            slider.addEventListener('input', function() {
+                valueDisplay.textContent = this.value;
+            });
+        }
+        // Initialize slider value updates
+        updateSliderValue('currentScoreSlider', 'currentScoreValue');
+        updateSliderValue('targetScoreSlider', 'targetScoreValue');
+        updateSliderValue('hoursSlider', 'hoursValue');
+        updateSliderValue('weeksSlider', 'weeksValue');
+        // Form Submission
+        document.getElementById('studyPlanForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const loadingAnimation = document.getElementById('loadingAnimation');
+            const resultsSection = document.getElementById('resultsSection');
+            const generateBtn = document.getElementById('generateBtn');
+            // Show loading
+            loadingAnimation.style.display = 'block';
+            resultsSection.style.display = 'none';
+            // Disable button
+            const originalHTML = generateBtn.innerHTML;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Generating...</span>';
+            generateBtn.disabled = true;
+            try {
+                const response = await fetch('/generate-plan', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    displayStudyPlan(result.plan);
+                    resultsSection.style.display = 'block';
+                    // Smooth scroll to results
+                    resultsSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                } else {
+                    throw new Error(result.error || 'Failed to generate study plan');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Sorry, something went wrong. Please try again.');
+            } finally {
+                loadingAnimation.style.display = 'none';
+                generateBtn.innerHTML = originalHTML;
+                generateBtn.disabled = false;
+            }
+        });
+        // Display Study Plan with Progress Tracking
+        function displayStudyPlan(plan) {
+            const container = document.getElementById('studyPlanContent');
+            let html = `
+                <div class="plan-overview">
+                    <h4>Plan Overview</h4>
+                    <p><strong>Current Score:</strong> ${plan.current_score}</p>
+                    <p><strong>Target Score:</strong> ${plan.target_score}</p>
+                    <p><strong>Test Type:</strong> ${plan.test_type.charAt(0).toUpperCase() + plan.test_type.slice(1)}</p>
+                    <p><strong>Duration:</strong> ${plan.duration}</p>
+                    <p><strong>Daily Hours:</strong> ${plan.hours_daily} hours</p>
+                    <p><strong>Intensity:</strong> ${plan.intensity}</p>
+                </div>
+            `;
+            // Add weekly plans
+            for (const [week, details] of Object.entries(plan.weekly_plan)) {
+                const weekId = week.replace(/\s+/g, '_');
+                html += `
+                    <div class="week-card" id="${weekId}">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h4 class="week-title">${week}</h4>
+                            <label style="font-weight:normal;">
+                                <input type="checkbox" class="week-complete-checkbox" data-week="${weekId}">
+                                Mark Week Complete
+                            </label>
+                        </div>
+                        <p><strong>Focus:</strong> ${details.focus}</p>
+                        <div class="day-schedule">
+                `;
+                for (const [day, schedule] of Object.entries(details.daily_schedule)) {
+                    const dayId = `${weekId}_${day}`;
+                    html += `
+                        <div class="day-item">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                                <h5>${day}</h5>
+                                <label style="font-weight:normal;font-size:0.9rem;">
+                                    <input type="checkbox" class="day-complete-checkbox" data-day="${dayId}">
+                                    Done
+                                </label>
+                            </div>
+                            <ul>
+                    `;
+                    schedule.forEach(activity => {
+                        html += `<li><strong>${activity.skill}:</strong> ${activity.duration}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+                html += '</div></div>';
+            }
+            container.innerHTML = html;
+            // Restore window.plan after render
+            window.currentPlan = plan;
+            // Attach event listeners for checkboxes
+            attachProgressListeners();
+        }
+        // Save progress (removed localStorage)
+        function attachProgressListeners() {
+            // Day checkboxes
+            document.querySelectorAll('.day-complete-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    showToast(this.checked ? "Task marked complete!" : "Task unmarked");
+                });
+            });
+            // Week checkboxes
+            document.querySelectorAll('.week-complete-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    showToast(this.checked ? "Week marked complete!" : "Week unmarked");
+                });
+            });
+        }
+        // Toast notification
+        function showToast(message) {
+            let toast = document.getElementById('progress-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'progress-toast';
+                toast.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; background: #333; color: white;
+                    padding: 10px 20px; border-radius: 8px; font-size: 14px; z-index: 9999;
+                    transition: opacity 0.5s; pointer-events: none;
+                `;
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        }
+        // PDF Export functionality - Enhanced Professional Design
+        document.getElementById('exportPdfBtn').addEventListener('click', async function() {
+            if (!window.currentPlan) {
+                alert('Please generate a study plan first');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                const btn = this;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Professional PDF...';
+                btn.disabled = true;
+                
+                // Create new jsPDF instance
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Set up colors and styling
+                const brandColor = [102, 126, 234]; // #667eea
+                const secondaryColor = [118, 75, 162]; // #764ba2
+                const textColor = [45, 55, 72]; // #2d3748
+                const lightGray = [107, 114, 128]; // #6b7280
+                const lineColor = [229, 231, 235]; // #e5e7eb
+                const accentColor = [59, 130, 246]; // #3b82f6
+                
+                let yPosition = 30;
+                let pageNumber = 1;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 25;
+                const contentWidth = pageWidth - (margin * 2);
+                
+                // Helper function to draw horizontal line
+                function drawLine(y, thickness = 0.5, color = lineColor) {
+                    doc.setDrawColor(...color);
+                    doc.setLineWidth(thickness);
+                    doc.line(margin, y, pageWidth - margin, y);
+                }
+                
+                // Helper function to draw section separator
+                function drawSectionSeparator(y) {
+                    doc.setDrawColor(...brandColor);
+                    doc.setLineWidth(2);
+                    doc.line(margin, y, margin + 60, y);
+                    doc.setDrawColor(...lineColor);
+                    doc.setLineWidth(0.5);
+                    doc.line(margin + 65, y, pageWidth - margin, y);
+                }
+                
+                // Helper function to add page number and footer
+                function addPageFooter() {
+                    const footerY = pageHeight - 20;
+                    
+                    // Page number
+                    doc.setFontSize(10);
+                    doc.setTextColor(...lightGray);
+                    doc.text(`Page ${pageNumber}`, pageWidth - margin - 20, footerY);
+                    
+                    // Footer line
+                    doc.setDrawColor(...lineColor);
+                    doc.setLineWidth(0.5);
+                    doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+                    
+                    // Company info
+                    doc.setFontSize(8);
+                    doc.setTextColor(...lightGray);
+                    doc.text('SparkSkyTech - Professional IELTS Preparation', margin, footerY);
+                    doc.text('www.sparkskytech.com/ielts', margin, footerY + 5);
+                }
+                
+                // Helper function to add new page
+                function addNewPage() {
+                    addPageFooter();
+                    doc.addPage();
+                    pageNumber++;
+                    yPosition = 30;
+                }
+                
+                // Helper function to check page break
+                function checkPageBreak(neededSpace = 25) {
+                    if (yPosition + neededSpace > pageHeight - 40) {
+                        addNewPage();
+                        return true;
+                    }
+                    return false;
+                }
+                
+                // HEADER SECTION with Logo Area
+                // Header background rectangle
+                doc.setFillColor(...brandColor);
+                doc.rect(0, 0, pageWidth, 25, 'F');
+                
+                // Main title
+                doc.setFontSize(28);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(255, 255, 255);
+                doc.text('IELTS STUDY PLAN', margin, 18);
+                
+                // Subtitle
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(255, 255, 255);
+                doc.text('Professional Learning Path by SparkSkyTech', pageWidth - margin - 80, 18);
+                
+                yPosition = 45;
+                
+                // Date and generation info
+                doc.setFontSize(11);
+                doc.setTextColor(...lightGray);
+                doc.setFont('helvetica', 'normal');
+                const generatedDate = new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                doc.text(`Generated: ${generatedDate}`, margin, yPosition);
+                doc.text(`Plan Type: Personalized IELTS Preparation`, pageWidth - margin - 70, yPosition);
+                yPosition += 20;
+                
+                drawLine(yPosition - 5, 1, lightGray);
+                yPosition += 10;
+                
+                // PLAN OVERVIEW SECTION
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...brandColor);
+                doc.text('PLAN OVERVIEW', margin, yPosition);
+                yPosition += 5;
+                
+                drawSectionSeparator(yPosition);
+                yPosition += 15;
+                
+                // Overview content in a bordered box
+                const overviewY = yPosition;
+                doc.setDrawColor(...lineColor);
+                doc.setLineWidth(1);
+                doc.rect(margin, overviewY, contentWidth, 55);
+                
+                // Fill with light background
+                doc.setFillColor(248, 250, 252);
+                doc.rect(margin, overviewY, contentWidth, 55, 'F');
+                doc.rect(margin, overviewY, contentWidth, 55);
+                
+                yPosition += 12;
+                
+                // Two-column layout for overview
+                const col1X = margin + 10;
+                const col2X = margin + (contentWidth / 2) + 10;
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                
+                // Left column
+                doc.text('Current Level:', col1X, yPosition);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...accentColor);
+                doc.text(`Band ${window.currentPlan.current_score}`, col1X + 35, yPosition);
+                
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('Target Level:', col1X, yPosition + 10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...accentColor);
+                doc.text(`Band ${window.currentPlan.target_score}`, col1X + 32, yPosition + 10);
+                
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('Duration:', col1X, yPosition + 20);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...accentColor);
+                doc.text(`${window.currentPlan.duration}`, col1X + 25, yPosition + 20);
+                
+                // Right column
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('Test Type:', col2X, yPosition);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...accentColor);
+                doc.text(`${window.currentPlan.test_type.charAt(0).toUpperCase() + window.currentPlan.test_type.slice(1)}`, col2X + 28, yPosition);
+                
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('Daily Hours:', col2X, yPosition + 10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...accentColor);
+                doc.text(`${window.currentPlan.hours_daily} hours`, col2X + 32, yPosition + 10);
+                
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...textColor);
+                doc.text('Intensity:', col2X, yPosition + 20);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...accentColor);
+                doc.text(`${window.currentPlan.intensity}`, col2X + 25, yPosition + 20);
+                
+                yPosition += 50;
+                
+                // WEEKLY STUDY PLAN SECTION
+                checkPageBreak(40);
+                yPosition += 20;
+                
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...brandColor);
+                doc.text('DETAILED WEEKLY PLAN', margin, yPosition);
+                yPosition += 5;
+                
+                drawSectionSeparator(yPosition);
+                yPosition += 20;
+                
+                // Weekly Plans
+                let weekCounter = 1;
+                for (const [weekTitle, weekDetails] of Object.entries(window.currentPlan.weekly_plan)) {
+                    checkPageBreak(60);
+                    
+                    // Week header with background
+                    const weekHeaderY = yPosition;
+                    doc.setFillColor(...brandColor);
+                    doc.rect(margin, weekHeaderY - 5, contentWidth, 15, 'F');
+                    
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(255, 255, 255);
+                    doc.text(`${weekTitle.toUpperCase()}`, margin + 8, weekHeaderY + 5);
+                    
+                    // Week number badge
+                    doc.setFillColor(255, 255, 255);
+                    doc.circle(pageWidth - margin - 15, weekHeaderY + 2, 8, 'F');
+                    doc.setTextColor(...brandColor);
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(`${weekCounter}`, pageWidth - margin - 18, weekHeaderY + 4);
+                    weekCounter++;
+                    
+                    yPosition += 20;
+                    
+                    // Week focus
+                    doc.setFontSize(11);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(...textColor);
+                    doc.text('Focus Area: ', margin + 5, yPosition);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...accentColor);
+                    doc.text(weekDetails.focus, margin + 30, yPosition);
+                    yPosition += 15;
+                    
+                    // Daily schedule in organized format
+                    for (const [day, activities] of Object.entries(weekDetails.daily_schedule)) {
+                        checkPageBreak(25);
+                        
+                        // Day header
+                        doc.setFontSize(12);
+                        doc.setFont('helvetica', 'bold');
+                        doc.setTextColor(...secondaryColor);
+                        doc.text(`● ${day}`, margin + 10, yPosition);
+                        yPosition += 8;
+                        
+                        // Activities
+                        doc.setFontSize(10);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setTextColor(...textColor);
+                        activities.forEach((activity, index) => {
+                            const activityText = `${activity.skill}: ${activity.duration}`;
+                            doc.text(`   ${index + 1}. ${activityText}`, margin + 20, yPosition);
+                            yPosition += 6;
+                        });
+                        yPosition += 5;
+                    }
+                    
+                    // Section divider
+                    yPosition += 5;
+                    drawLine(yPosition, 0.5, lineColor);
+                    yPosition += 10;
+                }
+                
+                // TIPS AND RECOMMENDATIONS SECTION
+                checkPageBreak(50);
+                yPosition += 10;
+                
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...brandColor);
+                doc.text('STUDY TIPS & RECOMMENDATIONS', margin, yPosition);
+                yPosition += 5;
+                
+                drawSectionSeparator(yPosition);
+                yPosition += 20;
+                
+                const tips = [
+                    'Follow the daily schedule consistently for optimal results',
+                    'Take practice tests weekly to monitor your progress',
+                    'Focus on your weakest skills while maintaining strong areas',
+                    'Use official IELTS materials for authentic practice',
+                    'Join study groups or find a study partner for motivation',
+                    'Record yourself speaking to improve pronunciation and fluency'
+                ];
+                
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...textColor);
+                
+                tips.forEach((tip, index) => {
+                    checkPageBreak(15);
+                    doc.setTextColor(...accentColor);
+                    doc.text(`${index + 1}.`, margin + 5, yPosition);
+                    doc.setTextColor(...textColor);
+                    const tipLines = doc.splitTextToSize(tip, contentWidth - 20);
+                    doc.text(tipLines, margin + 15, yPosition);
+                    yPosition += tipLines.length * 6 + 5;
+                });
+                
+                // Add final page footer
+                addPageFooter();
+                
+                // Save the PDF
+                const fileName = `IELTS_StudyPlan_Professional_${new Date().toISOString().split('T')[0]}.pdf`;
+                doc.save(fileName);
+                
+                // Reset button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Failed to generate PDF. Please try again.');
+                
+                // Reset button
+                const btn = this;
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+        // Text Export functionality
+        document.getElementById('exportTextBtn').addEventListener('click', async function() {
+            if (!window.currentPlan) {
+                alert('Please generate a study plan first');
+                return;
+            }
+            try {
+                const response = await fetch('/export-text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(window.currentPlan)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    // Create and download text file
+                    const blob = new Blob([result.content], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = `ielts_study_plan_${new Date().toISOString().split('T')[0]}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    throw new Error('Failed to export text');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to export text file. Please try again.');
+            }
+        });
+        // Copy to clipboard functionality
+        document.getElementById('copyTextBtn').addEventListener('click', async function() {
+            if (!window.currentPlan) {
+                alert('Please generate a study plan first');
+                return;
+            }
+            try {
+                const response = await fetch('/export-text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(window.currentPlan)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    await navigator.clipboard.writeText(result.content);
+                    // Show feedback
+                    const btn = this;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    btn.style.background = '#28a745';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = '#6c757d';
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to copy text');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to copy to clipboard. Please try again.');
+            }
+        });
+        // Language selector functionality
+        document.getElementById('language').addEventListener('change', function(e) {
+            const selectedLang = e.target.value;
+            switchLanguage(selectedLang);
+            console.log('Language changed to:', selectedLang);
+        });
+        // Initialize with English
+        switchLanguage('en');
+    </script>
+</body>
+</html>
