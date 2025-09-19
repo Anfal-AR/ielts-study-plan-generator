@@ -168,16 +168,65 @@ We welcome contributions to improve the IELTS Study Plan Generator:
 - **YouTube Channel**: [SparkSkyTech IELTS Playlist](https://www.youtube.com/watch?v=_Te3zfFW2ZU&list=PLaSmN7qMfXNQBOpbO2P6l9kDU4p0tRQDs)
 - **Facebook Group**: [IELTS Study Community](https://web.facebook.com/groups/1104742131254330)
 
-## 📄 License
+---------------------------------------------------------------------
+📚 Educational Impact
+This application has helped hundreds of IELTS candidates worldwide by:
 
-This project is developed by SparkSkyTech for educational purposes. All rights reserved.
+Providing structured study approaches
+Reducing preparation anxiety through clear planning
+Making quality IELTS guidance accessible globally
+Supporting both English and Arabic-speaking learners
 
-## 🙏 Acknowledgments
+🎓 Academic Context
+Developed as part of a comprehensive educational technology project, this application demonstrates:
 
-- SparkSkyTech team for educational content and resources
-- IELTS test preparation community for feedback and suggestions
-- Open-source libraries that made this project possible
+Full-stack development skills
+User-centered design principles
+Cross-cultural sensitivity (bilingual support)
+Educational technology innovation
+Open-source contribution to learning
 
----
+🔮 Future Enhancements
+
+ Progress tracking and analytics
+ PDF export functionality
+ Calendar integration
+ Mobile app version
+ AI-powered recommendations
+ Community features
+ Offline capability
+
+🤝 Contributing
+Contributions are welcome! This is a charity project aimed at making IELTS preparation accessible to everyone.
+How to contribute:
+
+Fork the repository
+Create a feature branch
+Make your changes
+Submit a pull request
+
+📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+👨‍💻 Author
+Anfal Al-Rasheed
+
+Portfolio: https://www.sparkskytech.com
+Email: Anfal0Rababah@gmail.com  - info@sparkskytech.com
+
+🙏 Acknowledgments
+
+Built with ❤️ for the global IELTS community
+Special thanks to all users providing feedback
+Inspired by the need for accessible educational technology
+
+
+⭐ If this project helped you, please star it on GitHub!
+💬 Questions? Open an issue or contact me directly.
+
+# Run the application
+python app.py
+
+# Open in browser
+# Visit: http://localhost:5000
 
 **Made with ❤️ by SparkSkyTech - Empowering Learners Worldwide**
