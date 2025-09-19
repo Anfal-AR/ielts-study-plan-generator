@@ -90,7 +90,7 @@ The PDF export includes:
 ## 🚦 Getting Started
 
 ### For Users
-1. Visit [https://ielts-app-1.onrender.com/](https://ielts-app-1.onrender.com/)
+1. Visit [[https://ielts-app-1.onrender.com/](https://ielts-app-1.onrender.com/)](https://ielts-study-plan-generator.onrender.com)
 2. Select your preferred language (English/Arabic)
 3. Choose input method (sliders or dropdowns)
 4. Fill in your IELTS preparation details
