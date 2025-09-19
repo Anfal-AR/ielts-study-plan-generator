@@ -509,7 +509,6 @@ if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
 
 from study_plan_logic import generate_study_plan
-import pdfkit
 from jinja2 import Template
 import os
 import base64
