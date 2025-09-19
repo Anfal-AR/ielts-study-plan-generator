@@ -224,7 +224,7 @@ Inspired by the need for accessible educational technology
 💬 Questions? Open an issue or contact me directly.
 
 # Run the application
-python app.py
+gunicorn --bind 0.0.0.0:$PORT app:app
 
 # Open in browser
 # Visit: http://localhost:5000
